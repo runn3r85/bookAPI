@@ -2,10 +2,19 @@ var bookController = function(Book){
 
   var post = function(req, res){
     var book = new Book(req.body);
-    
+    var msg = ' ';
+    var error = false;
+
     if(!req.body.title){
+      error = true;
+      msg += 'Title is required. ';
+    } else if (!req.body.author) {
+      error = true;
+      msg += 'Author is required. ';
+    }
+    if (error) {
       res.status(400);
-      res.send('Title is required');
+      res.send(msg);
     } else {
       book.save();
       res.status(201);

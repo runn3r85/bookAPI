@@ -9,7 +9,32 @@ describe('Book Controller Tests', function(){
 
       var req = {
         body: {
-          author: 'My author'
+          author: 'My author',
+          genre: 'Fiction'
+        }
+      };
+
+      var res = {
+        status: sinon.spy(),
+        send: sinon.spy()
+      };
+
+      var bookController = require('../controllers/bookController')(Book);
+
+      bookController.post(req, res);
+
+      res.status.calledWith(400).should.equal(true, 'Bad status ' + res.status.args[0]);
+      res.send.calledWith(' Title is required. ').should.equal(true, 'Sent message:' + res.status.args[0]);
+    });
+
+    it('should not allow an empty author on post', function(){
+      //Mock a book
+      var Book = function(book){this.save = function(){}};
+
+      var req = {
+        body: {
+          title: 'My Book Title',
+          genre: 'Fiction'
         }
       };
 
@@ -23,10 +48,7 @@ describe('Book Controller Tests', function(){
       bookController.post(req, res);
       
       res.status.calledWith(400).should.equal(true, 'Bad status ' + res.status.args[0]);
-      res.send.calledWith('Title is required').should.equal(true);
+      res.send.calledWith(' Author is required. ').should.equal(true);
     });
-
-
-
   });
 });
